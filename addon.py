@@ -43,9 +43,13 @@ def getData():
 
 def getFanart(channel):
     channel = channel.replace(' ', "").lower()
-    fanart = os.path.join(addonDir,'resources/fanart_'+channel+'.jpg');
+    channel = channel.split('.')
+    channel = channel[0]
+    channel = channel.split('-')
+    channel = channel[0];
+    fanart = os.path.join(addonDir,'resources/images/fanart_'+channel+'.jpg');
     if not os.path.isfile(fanart):
-        fanart = os.path.join(addonDir,'resources/fanart_zdf.jpg');
+        fanart = os.path.join(addonDir,'resources/images/fanart__zdf.jpg');
     #xbmcgui.Dialog().ok(addonID, 'fanart', str(fanart))
     xbmc.executebuiltin('Notification(Hello World,'+fanart+',10000,/script.hellow.world.png)')
     return fanart
