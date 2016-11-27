@@ -6,6 +6,7 @@ import xbmcgui
 import urllib
 import json
 import re
+import time
 
 addonID = 'plugin.video.mediathekdirekt'
 addon = xbmcaddon.Addon(id=addonID)
@@ -16,30 +17,33 @@ defaultFanart = os.path.join(addonDir,'resources/ard_fanart.jpg')
 icon = os.path.join(addonDir,'icon.png')
 addon_work_folder = xbmc.translatePath("special://profile/addon_data/" + addonID)
 jsonFile = xbmc.translatePath("special://profile/addon_data/" + addonID + "/good.json")
+maxFileAge = int(addon.getSetting("maxFileAge"))
+maxFileAge = maxFileAge*60
 
 if not os.path.isdir(addon_work_folder):
     os.mkdir(addon_work_folder)
 
 def index():
-	data = getData()
-	xbmcgui.Dialog().ok(addonID, 'data len', str(len(data)))
-	channels = []
-	for entry in data:
-		if entry[0] not in channels:
-			channels.append(entry[0])
-	length = len(channels) + 1;
-	addDir("", "", 'updateData', "", length)
-	channels.sort()
-	for entry in channels:
-		addDir(entry, entry, 'showChannel', getFanart(entry), length)
-	xbmcplugin.endOfDirectory(pluginhandle)
+    data = getData()
+    channels = []
+    for entry in data:
+        if entry[0] not in channels:
+            channels.append(entry[0])
+    length = len(channels) + 2;
+    addDir(translation(30001), '', 'search', '', length)
+    channels.sort()
+    for entry in channels:
+        addDir(entry, entry, 'showChannel', getFanart(entry), length)
+    addDir(translation(30006), "", 'updateData', "", length)
+    xbmcplugin.endOfDirectory(pluginhandle)
 
 def showChannel(channel = ""):
     if channel != "":
-    	fanart = getFanart(channel)
-    	addDir("Suche", channel, 'showChannel', fanart, 3)
-    	addDir("Nach Datum", channel, 'sortByYears', fanart, 3)
-    	addDir("Nach Thema", channel, 'sortTopicsInitials', fanart, 3)
+        fanart = getFanart(channel)
+        addDir(translation(30002), channel, 'search', fanart, 4)
+        addDir(translation(30003), channel, 'sortByYears', fanart, 4)
+        addDir(translation(30004), channel, 'sortTopicsInitials', fanart, 4)
+        addDir(translation(30005), channel, 'sortTitleInitials', fanart, 4)
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def sortByYears(channel = ""):
@@ -51,12 +55,12 @@ def sortByYears(channel = ""):
             if date[2] not in result:
                 if channel != "":
                     if entry[0] == channel:
-               		    result.append(date[2])
+                           result.append(date[2])
                 else:
                     result.append(date[2])
     result.sort(reverse=True)
     for entry in result:
-    	addDir(entry, channel+'|'+entry, 'sortByMonths', getFanart(channel), len(result))
+        addDir(entry, channel+'|'+entry, 'sortByMonths', getFanart(channel), len(result))
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def sortByMonths(channelYear = ""):
@@ -77,7 +81,7 @@ def sortByMonths(channelYear = ""):
                         result.append(date[1]+'.'+date[2])
     result.sort()
     for entry in result:
-    	addDir(entry, channel+'|'+entry, 'sortByDays', getFanart(channel), len(result))
+        addDir(entry, channel+'|'+entry, 'sortByDays', getFanart(channel), len(result))
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def sortByDays(channelMMYY = ""):
@@ -87,19 +91,19 @@ def sortByDays(channelMMYY = ""):
     mmYY = ""
     result = []
     if len(params) > 1:
-    	channel = params[0]
-    	mmYY = params[1]
+        channel = params[0]
+        mmYY = params[1]
     for entry in data:
-    	if entry[0] == channel:
-    		date = entry[3].split('.',1)
-    		if len(date) > 1:
-    			if date[1] == mmYY:
-    				if date[0]+'.'+date[1] not in result:
-    					result.append(date[0]+'.'+date[1])
+        if entry[0] == channel:
+            date = entry[3].split('.',1)
+            if len(date) > 1:
+                if date[1] == mmYY:
+                    if date[0]+'.'+date[1] not in result:
+                        result.append(date[0]+'.'+date[1])
     result.sort()
     for entry in result:
-    	params = str(channel+'|'+entry)
-    	addDir(entry, params, 'showDay', getFanart(channel), len(result))
+        params = str(channel+'|'+entry)
+        addDir(entry, params, 'showDay', getFanart(channel), len(result))
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def showDay(channelDate):
@@ -120,22 +124,65 @@ def showDay(channelDate):
         addVideo(entry)
     xbmcplugin.endOfDirectory(pluginhandle)
 
+def sortTitleInitials(channel = ""):
+    data = getData()
+    result = []
+    fanart = getFanart(channel)
+    if channel != "":
+        for entry in data:
+            if entry[0] == channel:
+                if len(entry[1]) > 0:
+                    l = entry[1][0].upper()
+                    if not re.match('^([a-z|A-Z])',l):
+                        l = '#'
+                    if l not in result:
+                        result.append(l)
+    result.sort()
+    for entry in result:
+        addDir(entry, channel+'|'+entry, 'sortTitles', fanart, len(result))
+    xbmcplugin.endOfDirectory(pluginhandle)
+
 def sortTopicsInitials(channel = ""):
     data = getData()
     result = []
     fanart = getFanart(channel)
     if channel != "":
-    	for entry in data:
-    		if entry[0] == channel:
-    			if len(entry[2]) > 0:
-    				l = entry[2][0].upper()
-    				if not re.match('^([a-z|A-Z])',l):
-    					l = '#'
-    				if l not in result:
-    					result.append(l)
+        for entry in data:
+            if entry[0] == channel:
+                if len(entry[2]) > 0:
+                    l = entry[2][0].upper()
+                    if not re.match('^([a-z|A-Z])',l):
+                        l = '#'
+                    if l not in result:
+                        result.append(l)
     result.sort()
     for entry in result:
-    	addDir(entry, channel+'|'+entry, 'sortTopics', fanart, len(result))
+        addDir(entry, channel+'|'+entry, 'sortTopics', fanart, len(result))
+    xbmcplugin.endOfDirectory(pluginhandle)
+
+def sortTitles(channelInitial="|"):
+    data = getData()
+    result = []
+    params = channelInitial.split("|")
+    channel = ""
+    initial = ""
+    if len(params) > 1:
+        channel = params[0]
+        initial = params[1]
+    fanart = getFanart(channel)
+    if channel != "":
+        for entry in data:
+            if entry[0] == channel:
+                i = entry[1][0].upper()
+                if initial == '#':
+                    if not re.match('^([a-z|A-Z])', i):
+                            result.append(entry)
+                else:
+                    if initial == i:
+                        result.append(entry)
+    result.sort(key=lambda entry: entry[1].lower())
+    for entry in result:
+        addVideo(entry)
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def sortTopics(channelInitial="|"):
@@ -146,35 +193,93 @@ def sortTopics(channelInitial="|"):
     initial = ""
     if len(params) > 1:
         channel = params[0]
-        initial = params[1]	
+        initial = params[1]    
     fanart = getFanart(channel)
     if channel != "":
-    	for entry in data:
-    		if entry[0] == channel:
-    			i = entry[2][0].upper()
-    			if initial == '#':
-    			    if not re.match('^([a-z|A-Z])', i):
-    			        if entry[2] not in result:
-    			        	result.append(entry[2])
-    			else:
-    				if initial == i:
-    					if entry[2] not in result:
-    						result.append(entry[2])
-    result.sort()
+        for entry in data:
+            if entry[0] == channel:
+                i = entry[2][0].upper()
+                if initial == '#':
+                    if not re.match('^([a-z|A-Z])', i):
+                        if entry[2] not in result:
+                            result.append(entry[2])
+                else:
+                    if initial == i:
+                        if entry[2] not in result:
+                            result.append(entry[2])
+    result.sort(key=lambda entry: entry.lower())
     xbmcgui.Dialog().ok(addonID, str(result))
     for entry in result:
-    	addDir(entry.encode('utf8'), channel.encode('utf8')+'|'+entry.encode('utf8'), 'sortTopic', fanart, len(result))
+        addDir(entry.encode('utf8'), channel.encode('utf8')+'|'+entry.encode('utf8'), 'sortTopic', fanart, len(result))
     xbmcplugin.endOfDirectory(pluginhandle)
 
+def sortTopic(channelTopic = "|"):
+    data = getData()
+    result = []
+    params = channelTopic.split("|",1)
+    channel = ""
+    topic = ""
+    if len(params) > 1:
+        channel = params[0]
+        topic = params[1]
+    fanart = getFanart(channel)
+    if channel != "":
+        for entry in data:
+            if entry[0] == channel:
+                if entry[2].encode('utf8') == topic:
+                        result.append(entry)
+    result.sort(key=lambda entry: entry[2].lower())
+    for entry in result:
+        addVideo(entry)
+    xbmcplugin.endOfDirectory(pluginhandle)
+
+def search(channel=""):
+    result = []
+    keyboard = xbmc.Keyboard('', translation(30002))
+    keyboard.doModal()
+    if keyboard.isConfirmed() and keyboard.getText():
+        search_string = keyboard.getText().encode('utf8').lower()
+        if len(search_string) > 0:
+            data = getData()
+            for entry in data:
+                cEntry = entry
+                if search_string in cEntry[1].encode('utf8').lower():
+                    if channel != "":
+                        if cEntry[0] == channel:
+                            cEntry[1] = cEntry[2]+': '+cEntry[1]
+                            result.append(cEntry)
+                    else:
+                        cEntry[1] = cEntry[2]+': '+cEntry[1]
+                        result.append(cEntry)
+                elif search_string in cEntry[2].encode('utf8').lower():
+                    if channel != "":
+                        if cEntry[0] == channel:
+                            cEntry[1] = cEntry[2]+': '+cEntry[1]
+                            result.append(cEntry)
+                    else:
+                        cEntry[1] = cEntry[2]+': '+cEntry[1]
+                        result.append(cEntry)
+            result.sort(key=lambda entry: entry[1].lower())
+            for entry in result:
+                addVideo(entry)
+        xbmcplugin.endOfDirectory(pluginhandle)
 
 def updateData():
     target = urllib.URLopener()
     target.retrieve("http://www.mediathekdirekt.de/good.json", jsonFile)
 
 def getData():
-	with open(jsonFile, 'r') as f:
-		data = json.load(f, encoding='utf-8')
-		return data
+    if not os.path.isfile(jsonFile):
+        updateData()
+    else:
+        fileTime = os.path.getmtime(jsonFile)
+        now = time.time()
+        if now-fileTime > maxFileAge:
+            updateData()
+
+    with open(jsonFile, 'r') as f:
+        data = json.load(f)
+        return data
 
 def getFanart(channel):
     channel = channel.replace(' ', "").lower()
@@ -184,7 +289,7 @@ def getFanart(channel):
     channel = channel[0];
     fanart = os.path.join(addonDir,'resources/images/fanart_'+channel+'.jpg');
     if not os.path.isfile(fanart):
-        fanart = os.path.join(addonDir,'resources/images/fanart__zdf.jpg');
+        fanart = icon
     return fanart
 
 def addDir(name, url, mode, iconimage, total=0):
@@ -209,20 +314,17 @@ def addVideo(entry):
         year = date.split('.')
         premiered = str(date[-1]+'-'+date[-2]+'-'+date[-3])
         year = date[-1]
-        #duration in HH:MM:SS
         duration = entry[4]
         description = entry[5]
         url = entry[6]
+        fanart = getFanart(channel)
         li = xbmcgui.ListItem(title)
         li.setInfo(type="Video", infoLabels={"Title": title, "Duration": duration, "Genre": topic, "Year": year, "Plotoutline": description, "Studio": channel, "premiered": premiered, "aired": premiered, "dateadded": premiered+' '+duration})
-        li.setArt({'thumb': getFanart(channel)})
+        li.setArt({'thumb': fanart})
+        li.setProperty("fanart_image", fanart)
         li.setProperty('IsPlayable', 'true')
         ok = xbmcplugin.addDirectoryItem(handle=pluginhandle, url=url, listitem=li)
     return ok
-
-def serialize(input):
-	result = urllib.quote_plus(input)
-	return result
 
 def parameters_string_to_dict(parameters):
     paramDict = {}
@@ -242,18 +344,26 @@ name = urllib.unquote_plus(params.get('name', ''))
 if mode == 'updateData':
     updateData()
 elif mode == 'sortByYears':
-	sortByYears(url)
+    sortByYears(url)
 elif mode == 'sortByMonths':
-	sortByMonths(url)
+    sortByMonths(url)
 elif mode == 'sortByDays':
-	sortByDays(url)
+    sortByDays(url)
 elif mode == 'showDay':
-	showDay(url)
+    showDay(url)
 elif mode == 'showChannel':
-	showChannel(url)
+    showChannel(url)
 elif mode == 'sortTopicsInitials':
-	sortTopicsInitials(url)
+    sortTopicsInitials(url)
 elif mode == 'sortTopics':
-	sortTopics(url)
+    sortTopics(url)
+elif mode == 'sortTopic':
+    sortTopic(url)
+elif mode == 'search':
+    search(url)
+elif mode == 'sortTitleInitials':
+    sortTitleInitials(url)
+elif mode == 'sortTitles':
+    sortTitles(url)
 else:
     index()
