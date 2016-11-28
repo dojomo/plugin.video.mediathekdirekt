@@ -19,6 +19,8 @@ addon_work_folder = xbmc.translatePath("special://profile/addon_data/" + addonID
 jsonFile = xbmc.translatePath("special://profile/addon_data/" + addonID + "/good.json")
 maxFileAge = int(addon.getSetting("maxFileAge"))
 maxFileAge = maxFileAge*60
+localThumbOnly = str(addon.getSetting("localThumbOnly")).lower()
+ThumbAsFanart = str(addon.getSetting("ThumbAsFanart")).lower()
 
 if not os.path.isdir(addon_work_folder):
     os.mkdir(addon_work_folder)
@@ -291,6 +293,20 @@ def getFanart(channel):
         fanart = icon
     return fanart
 
+def getFanartFromLink(link = "", channel = ""):
+    result = getFanart(channel)
+    if link != "":
+        u = urllib.urlopen(link)
+        content = u.read()
+        found = re.compile('<meta property="og:image" content="([^"]+)', re.DOTALL).findall(content)
+        if len(found) > 0:
+            try:
+                urllib.urlopen(found[0])
+                result = found[0]
+            except:
+                exists = False
+    return result
+
 def addDir(name, url, mode, iconimage, total=0):
     u = sys.argv[0] + "?url=" + urllib.quote_plus(url) + "&mode=" + str(mode)
     ok = True
@@ -305,7 +321,7 @@ def addDir(name, url, mode, iconimage, total=0):
 
 def addVideo(entry):
     ok = True
-    if len(entry) > 6:
+    if len(entry) > 7:
         channel = entry[0]
         title = entry[1]
         topic = entry[2]
@@ -316,10 +332,18 @@ def addVideo(entry):
         duration = entry[4]
         description = entry[5]
         url = entry[6]
-        fanart = getFanart(channel)
+        link = entry[7]
+        if localThumbOnly == "false":
+            thumbnail = getFanartFromLink(link,channel)
+        else:
+            thumbnail = getFanart(channel)
+        if (localThumbOnly == "false") and (ThumbAsFanart == "true"):
+            fanart = thumbnail
+        else:
+            fanart = getFanart(channel)
         li = xbmcgui.ListItem(title)
-        li.setInfo(type="Video", infoLabels={"Title": title, "Duration": duration, "Genre": topic, "Year": year, "Plotoutline": description, "Studio": channel, "premiered": premiered, "aired": premiered, "dateadded": premiered+' '+duration})
-        li.setArt({'thumb': fanart})
+        li.setInfo(type="Video", infoLabels={"Title": title, "Duration": duration, "Genre": topic, "Year": year, "PlotOutline": description, "Plot": description, "Studio": channel, "premiered": premiered, "aired": premiered, "dateadded": premiered+' '+duration})
+        li.setArt({'thumb': thumbnail})
         li.setProperty("fanart_image", fanart)
         li.setProperty('IsPlayable', 'true')
         ok = xbmcplugin.addDirectoryItem(handle=pluginhandle, url=url, listitem=li)

@@ -7,5 +7,7 @@
   <string id="30005">Nach Titel</string>
   <string id="30006">Daten manuell aktualisieren</string>
   <string id="32100">Allgemeines</string>
-  <string id="32110">Zeitintervall Datenupdate in Min</string>
+  <string id="32101">Zeitintervall Datenupdate in Min</string>
+  <string id="32102">Nur lokale Thumbnails verwenden</string>
+  <string id="32103">Thumbnail als Fanart</string>
 </strings>
