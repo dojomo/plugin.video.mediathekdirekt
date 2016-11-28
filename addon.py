@@ -20,6 +20,7 @@ addon_work_folder = xbmc.translatePath("special://profile/addon_data/" + addonID
 jsonFile = xbmc.translatePath("special://profile/addon_data/" + addonID + "/good.json")
 maxFileAge = int(addon.getSetting("maxFileAge"))
 maxFileAge = maxFileAge*60
+showTopicsDirectly = str(addon.getSetting("showTopicsDirectly")).lower()
 
 if not os.path.isdir(addon_work_folder):
     os.mkdir(addon_work_folder)
@@ -49,7 +50,10 @@ def showChannel(channel = ""):
         addDir(translation(30008), channel+'|'+today, 'searchDate', fanart, 6)
         addDir(translation(30009), channel+'|'+yesterday, 'searchDate', fanart, 6)
         addDir(translation(30003), channel, 'sortByYears', fanart, 6)
-        addDir(translation(30004), channel, 'sortTopicsInitials', fanart, 6)
+        if showTopicsDirectly == "true":
+            addDir(translation(30004), channel+'|', 'sortTopics', fanart, 6)
+        else:
+            addDir(translation(30004), channel, 'sortTopicsInitials', fanart, 6)
         addDir(translation(30005), channel, 'sortTitleInitials', fanart, 6)
     xbmcplugin.endOfDirectory(pluginhandle)
 
@@ -212,10 +216,14 @@ def sortTopics(channelInitial="|"):
                     if not re.match('^([a-z|A-Z])', i):
                         if entry[2] not in result:
                             result.append(entry[2])
+                elif (initial == "") and (showTopicsDirectly == "true"):
+                    if entry[2] not in result:
+                        result.append(entry[2])
                 else:
                     if initial == i:
                         if entry[2] not in result:
                             result.append(entry[2])
+
     result.sort(key=lambda entry: entry.lower())
     for entry in result:
         addDir(entry.encode('utf8'), channel.encode('utf8')+'|'+entry.encode('utf8'), 'sortTopic', fanart, len(result))
