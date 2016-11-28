@@ -2,8 +2,5 @@
 <settings>
 	<category label="32100">
   		<setting label="32101" type="slider" id="maxFileAge" default="30" range="15,15,1440" option="int" />
-  		<setting type="sep"/>
-  		<setting label="32102" type="bool" id="localThumbOnly" default="true"/>
-  		<setting label="32103" type="bool" id="thumbAsFanart" default="false" enable="eq(-1,false)"/>
   	</category>
 </settings>

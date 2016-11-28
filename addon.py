@@ -19,8 +19,6 @@ addon_work_folder = xbmc.translatePath("special://profile/addon_data/" + addonID
 jsonFile = xbmc.translatePath("special://profile/addon_data/" + addonID + "/good.json")
 maxFileAge = int(addon.getSetting("maxFileAge"))
 maxFileAge = maxFileAge*60
-localThumbOnly = str(addon.getSetting("localThumbOnly")).lower()
-ThumbAsFanart = str(addon.getSetting("ThumbAsFanart")).lower()
 
 if not os.path.isdir(addon_work_folder):
     os.mkdir(addon_work_folder)
@@ -61,8 +59,10 @@ def sortByYears(channel = ""):
                 else:
                     result.append(date[2])
     result.sort(reverse=True)
+    length = len(result) + 1
+    addDir(translation(30007), channel, 'searchDate', getFanart(channel), length)
     for entry in result:
-        addDir(entry, channel+'|'+entry, 'sortByMonths', getFanart(channel), len(result))
+        addDir(entry, channel+'|'+entry, 'sortByMonths', getFanart(channel), length)
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def sortByMonths(channelYear = ""):
@@ -265,6 +265,23 @@ def search(channel=""):
                 addVideo(entry)
         xbmcplugin.endOfDirectory(pluginhandle)
 
+def searchDate(channel = ""):
+    result = []
+    dialog = xbmcgui.Dialog()
+    date = dialog.numeric(1, translation(30007))
+    date = date.replace("/",".")
+    if (channel != "") and (len(date) == 10):
+        data = getData()
+        for entry in data:
+            cEntry = entry
+            if (entry[0] == channel) and (entry[3] == date):
+                cEntry[1] = cEntry[2]+': '+cEntry[1]
+                result.append(cEntry)
+            result.sort(key=lambda entry: entry[1].lower())
+        for entry in result:
+            addVideo(entry)
+    xbmcplugin.endOfDirectory(pluginhandle)
+
 def updateData():
     target = urllib.URLopener()
     target.retrieve("http://www.mediathekdirekt.de/good.json", jsonFile)
@@ -293,20 +310,6 @@ def getFanart(channel):
         fanart = icon
     return fanart
 
-def getFanartFromLink(link = "", channel = ""):
-    result = getFanart(channel)
-    if link != "":
-        u = urllib.urlopen(link)
-        content = u.read()
-        found = re.compile('<meta property="og:image" content="([^"]+)', re.DOTALL).findall(content)
-        if len(found) > 0:
-            try:
-                urllib.urlopen(found[0])
-                result = found[0]
-            except:
-                exists = False
-    return result
-
 def addDir(name, url, mode, iconimage, total=0):
     u = sys.argv[0] + "?url=" + urllib.quote_plus(url) + "&mode=" + str(mode)
     ok = True
@@ -333,17 +336,10 @@ def addVideo(entry):
         description = entry[5]
         url = entry[6]
         link = entry[7]
-        if localThumbOnly == "false":
-            thumbnail = getFanartFromLink(link,channel)
-        else:
-            thumbnail = getFanart(channel)
-        if (localThumbOnly == "false") and (ThumbAsFanart == "true"):
-            fanart = thumbnail
-        else:
-            fanart = getFanart(channel)
+        fanart = getFanart(channel)
         li = xbmcgui.ListItem(title)
         li.setInfo(type="Video", infoLabels={"Title": title, "Duration": duration, "Genre": topic, "Year": year, "PlotOutline": description, "Plot": description, "Studio": channel, "premiered": premiered, "aired": premiered, "dateadded": premiered+' '+duration})
-        li.setArt({'thumb': thumbnail})
+        li.setArt({'thumb': fanart})
         li.setProperty("fanart_image", fanart)
         li.setProperty('IsPlayable', 'true')
         ok = xbmcplugin.addDirectoryItem(handle=pluginhandle, url=url, listitem=li)
@@ -388,5 +384,7 @@ elif mode == 'sortTitleInitials':
     sortTitleInitials(url)
 elif mode == 'sortTitles':
     sortTitles(url)
+elif mode == 'searchDate':
+    searchDate(url)
 else:
     index()
