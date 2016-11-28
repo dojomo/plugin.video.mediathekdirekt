@@ -208,7 +208,6 @@ def sortTopics(channelInitial="|"):
                         if entry[2] not in result:
                             result.append(entry[2])
     result.sort(key=lambda entry: entry.lower())
-    xbmcgui.Dialog().ok(addonID, str(result))
     for entry in result:
         addDir(entry.encode('utf8'), channel.encode('utf8')+'|'+entry.encode('utf8'), 'sortTopic', fanart, len(result))
     xbmcplugin.endOfDirectory(pluginhandle)
