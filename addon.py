@@ -7,6 +7,7 @@ import urllib
 import json
 import re
 import time
+from datetime import date, timedelta
 
 addonID = 'plugin.video.mediathekdirekt'
 addon = xbmcaddon.Addon(id=addonID)
@@ -38,12 +39,18 @@ def index():
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def showChannel(channel = ""):
+    today = date.today()
+    yesterday = today - timedelta(days=1)
+    today = today.strftime("%d.%m.%Y")
+    yesterday = yesterday.strftime("%d.%m.%Y")
     if channel != "":
         fanart = getFanart(channel)
-        addDir(translation(30002), channel, 'search', fanart, 4)
-        addDir(translation(30003), channel, 'sortByYears', fanart, 4)
-        addDir(translation(30004), channel, 'sortTopicsInitials', fanart, 4)
-        addDir(translation(30005), channel, 'sortTitleInitials', fanart, 4)
+        addDir(translation(30002), channel, 'search', fanart, 6)
+        addDir(translation(30008), channel+'|'+today, 'searchDate', fanart, 6)
+        addDir(translation(30009), channel+'|'+yesterday, 'searchDate', fanart, 6)
+        addDir(translation(30003), channel, 'sortByYears', fanart, 6)
+        addDir(translation(30004), channel, 'sortTopicsInitials', fanart, 6)
+        addDir(translation(30005), channel, 'sortTitleInitials', fanart, 6)
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def sortByYears(channel = ""):
@@ -265,11 +272,18 @@ def search(channel=""):
                 addVideo(entry)
         xbmcplugin.endOfDirectory(pluginhandle)
 
-def searchDate(channel = ""):
+def searchDate(channelDate = ""):
+    channel = ""
+    date = ""
+    params = channelDate.split('|')
+    channel = params[0]
+    if len(params) > 1:
+        date = params[1]
     result = []
-    dialog = xbmcgui.Dialog()
-    date = dialog.numeric(1, translation(30007))
-    date = date.replace("/",".")
+    if date == "":
+        dialog = xbmcgui.Dialog()
+        date = dialog.numeric(1, translation(30007))
+        date = date.replace("/",".")
     if (channel != "") and (len(date) == 10):
         data = getData()
         for entry in data:

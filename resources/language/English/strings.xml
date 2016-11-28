@@ -7,6 +7,8 @@
   <string id="30005">By Title</string>
   <string id="30006">Manual Data Update</string>
   <string id="30007">Enter date</string>
+  <string id="30008">Today's shows</string>
+  <string id="30009">Yesterday's shows</string>
   <string id="32100">General</string>
   <string id="32101">time interval Data Update in Min</string>
 </strings>
