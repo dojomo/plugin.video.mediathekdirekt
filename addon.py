@@ -244,7 +244,7 @@ def sortTopic(channelTopic = "|"):
             if entry[0] == channel:
                 if entry[2].encode('utf8') == topic:
                         result.append(entry)
-    result.sort(key=lambda entry: entry[2].lower())
+    result.sort(key=lambda entry: entry[1].lower())
     for entry in result:
         addVideo(entry)
     xbmcplugin.endOfDirectory(pluginhandle)
@@ -366,6 +366,7 @@ def addVideo(entry):
         li.setProperty('IsPlayable', 'true')
         ok = xbmcplugin.addDirectoryItem(handle=pluginhandle, url=url, listitem=li)
     return ok
+
 
 def parameters_string_to_dict(parameters):
     paramDict = {}
