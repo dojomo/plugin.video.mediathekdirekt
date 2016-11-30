@@ -31,8 +31,12 @@ def index():
     for entry in data:
         if entry[0] not in channels:
             channels.append(entry[0])
-    length = len(channels) + 2;
+    length = len(channels) + 3;
     addDir(translation(30001), '', 'search', '', length)
+    if showTopicsDirectly == "true":
+        addDir(translation(30010), '|', 'sortTopics', '', length)
+    else:
+        addDir(translation(30010), '', 'sortTopicsInitials', '', length)
     channels.sort()
     for entry in channels:
         addDir(entry, entry, 'showChannel', getFanart(entry), length)
@@ -155,12 +159,13 @@ def sortTitleInitials(channel = ""):
         addDir(entry, channel+'|'+entry, 'sortTitles', fanart, len(result))
     xbmcplugin.endOfDirectory(pluginhandle)
 
+
 def sortTopicsInitials(channel = ""):
     data = getData()
     result = []
     fanart = getFanart(channel)
-    if channel != "":
-        for entry in data:
+    for entry in data:
+        if channel != "":
             if entry[0] == channel:
                 if len(entry[2]) > 0:
                     l = entry[2][0].upper()
@@ -168,6 +173,13 @@ def sortTopicsInitials(channel = ""):
                         l = '#'
                     if l not in result:
                         result.append(l)
+        else:
+            if len(entry[2]) > 0:
+                l = entry[2][0].upper()
+                if not re.match('^([a-z|A-Z])',l):
+                    l = '#'
+                if l not in result:
+                    result.append(l)
     result.sort()
     for entry in result:
         addDir(entry, channel+'|'+entry, 'sortTopics', fanart, len(result))
@@ -208,8 +220,8 @@ def sortTopics(channelInitial="|"):
         channel = params[0]
         initial = params[1]    
     fanart = getFanart(channel)
-    if channel != "":
-        for entry in data:
+    for entry in data:
+        if channel != "":
             if entry[0] == channel:
                 i = entry[2][0].upper()
                 if initial == '#':
@@ -223,7 +235,19 @@ def sortTopics(channelInitial="|"):
                     if initial == i:
                         if entry[2] not in result:
                             result.append(entry[2])
-
+        else:
+            i = entry[2][0].upper()
+            if initial == '#':
+                if not re.match('^([a-z|A-Z])', i):
+                    if entry[2] not in result:
+                        result.append(entry[2])
+            elif (initial == "") and (showTopicsDirectly == "true"):
+                if entry[2] not in result:
+                    result.append(entry[2])
+            else:
+                if initial == i:
+                    if entry[2] not in result:
+                        result.append(entry[2])
     result.sort(key=lambda entry: entry.lower())
     for entry in result:
         addDir(entry.encode('utf8'), channel.encode('utf8')+'|'+entry.encode('utf8'), 'sortTopic', fanart, len(result))
@@ -239,11 +263,14 @@ def sortTopic(channelTopic = "|"):
         channel = params[0]
         topic = params[1]
     fanart = getFanart(channel)
-    if channel != "":
-        for entry in data:
+    for entry in data:
+        if channel != "":
             if entry[0] == channel:
                 if entry[2].encode('utf8') == topic:
-                        result.append(entry)
+                    result.append(entry)
+        else:
+            if entry[2].encode('utf8') == topic:
+                result.append(entry)
     result.sort(key=lambda entry: entry[1].lower())
     for entry in result:
         addVideo(entry)
