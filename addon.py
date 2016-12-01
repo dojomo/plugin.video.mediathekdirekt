@@ -394,7 +394,6 @@ def addVideo(entry):
         ok = xbmcplugin.addDirectoryItem(handle=pluginhandle, url=url, listitem=li)
     return ok
 
-
 def parameters_string_to_dict(parameters):
     paramDict = {}
     if parameters:
