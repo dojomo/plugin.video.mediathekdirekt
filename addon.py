@@ -124,6 +124,7 @@ def sortByDays(channelMMYY = ""):
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def showDay(channelDate):
+    xbmcplugin.setContent(pluginhandle, 'movies');
     data = getData()
     params = channelDate.split("|")
     channel = ""
@@ -186,6 +187,7 @@ def sortTopicsInitials(channel = ""):
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def sortTitles(channelInitial="|"):
+    xbmcplugin.setContent(pluginhandle, 'movies');
     data = getData()
     result = []
     params = channelInitial.split("|")
@@ -254,6 +256,7 @@ def sortTopics(channelInitial="|"):
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def sortTopic(channelTopic = "|"):
+    xbmcplugin.setContent(pluginhandle, 'movies');
     data = getData()
     result = []
     params = channelTopic.split("|",1)
@@ -277,6 +280,7 @@ def sortTopic(channelTopic = "|"):
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def search(channel=""):
+    xbmcplugin.setContent(pluginhandle, 'movies');
     result = []
     keyboard = xbmc.Keyboard('', translation(30002))
     keyboard.doModal()
@@ -308,6 +312,7 @@ def search(channel=""):
         xbmcplugin.endOfDirectory(pluginhandle)
 
 def searchDate(channelDate = ""):
+    xbmcplugin.setContent(pluginhandle, 'movies');
     channel = ""
     date = ""
     params = channelDate.split('|')
@@ -379,10 +384,10 @@ def addVideo(entry):
         topic = entry[2]
         date = entry[3]
         year = date.split('.')
-        premiered = str(date[-1]+'-'+date[-2]+'-'+date[-3])
-        year = date[-1]
+        premiered = str(date[2]+'-'+date[1]+'-'+date[0])
+        year = date[-4:]
         duration = entry[4]
-        description = entry[5]
+        description = entry[5]+"..."
         url = entry[6]
         link = entry[7]
         fanart = getFanart(channel)
