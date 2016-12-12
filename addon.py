@@ -412,7 +412,6 @@ def parameters_string_to_dict(parameters):
 params = parameters_string_to_dict(sys.argv[2])
 mode = urllib.unquote_plus(params.get('mode', ''))
 url = urllib.unquote_plus(params.get('url', ''))
-name = urllib.unquote_plus(params.get('name', ''))
 
 if mode == 'updateData':
     updateData()
