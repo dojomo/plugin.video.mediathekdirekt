@@ -7,4 +7,5 @@
 -Added Setting to show Topics directly
 -Fixed Topic sorting
 -Added "All Topics" in Main Menu
+0.0.4
 -Added ContentType to show Video meta data where possible
