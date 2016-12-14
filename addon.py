@@ -323,7 +323,8 @@ def searchDate(channelDate = ""):
     if date == "":
         dialog = xbmcgui.Dialog()
         date = dialog.numeric(1, translation(30007))
-        date = date.replace("/",".")
+        date = re.sub('[^0-9|^\/]','0',date)
+        date = date.replace('/','.')
     if (channel != "") and (len(date) == 10):
         data = getData()
         for entry in data:

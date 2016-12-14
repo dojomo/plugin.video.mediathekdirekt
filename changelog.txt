@@ -9,3 +9,5 @@
 -Added "All Topics" in Main Menu
 0.0.4
 -Added ContentType to show Video meta data where possible
+0.0.5
+-Fixed search via numeric Dialog for dates with zero-padding.
