@@ -1,0 +1,11 @@
+0.0.1
+- Inital Release
+0.0.2
+- Added a numeric Dialog for Dates
+- Added "Today's/Yesterday's Shows"
+0.0.3
+-Added Setting to show Topics directly
+-Fixed Topic sorting
+-Added "All Topics" in Main Menu
+0.0.4
+-Added ContentType to show Video meta data where possible

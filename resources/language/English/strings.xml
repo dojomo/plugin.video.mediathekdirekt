@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+  <string id="30001">Global Search</string>
+  <string id="30002">Search</string>
+  <string id="30003">By Date</string>
+  <string id="30004">By Topic</string>
+  <string id="30005">By Title</string>
+  <string id="30006">Manual Data Update</string>
+  <string id="30007">Enter date</string>
+  <string id="30008">Today's shows</string>
+  <string id="30009">Yesterday's shows</string>
+  <string id="30010">All Topics</string>
+  <string id="32100">General</string>
+  <string id="32101">time interval Data Update in Min</string>
+  <string id="32102">Show all topics directly</string>
+</strings>
