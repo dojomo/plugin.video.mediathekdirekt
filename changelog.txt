@@ -11,3 +11,5 @@
 -Added ContentType to show Video meta data where possible
 0.0.5
 -Fixed search via numeric Dialog for dates with zero-padding.
+0.0.6
+-Fixed encoding error when trying to search with special characters.

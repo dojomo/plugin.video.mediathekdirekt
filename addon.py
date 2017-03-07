@@ -285,7 +285,8 @@ def search(channel=""):
     keyboard = xbmc.Keyboard('', translation(30002))
     keyboard.doModal()
     if keyboard.isConfirmed() and keyboard.getText():
-        search_string = keyboard.getText().encode('utf8').lower()
+        #search_string = keyboard.getText().encode('utf8').lower()
+        search_string = keyboard.getText().lower()
         if len(search_string) > 0:
             data = getData()
             for entry in data:

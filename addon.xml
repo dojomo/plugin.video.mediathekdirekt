@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.mediathekdirekt" name="Mediathek Direkt" version="0.0.5" provider-name="P_Aeh">
+<addon id="plugin.video.mediathekdirekt" name="Mediathek Direkt" version="0.0.6" provider-name="P_Aeh">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
@@ -11,15 +11,15 @@
     <description lang="en_gb">Access to the Media Library of german speaking TV channels: 3sat, ARD, Arte, BR, DW, HR, KIKA, MDR, NDR, ORF, Phoenix, RBB, SR, SRF, SWR and ZDF.</description>
     <disclaimer lang="en_gb">This addon may not work in every country.</disclaimer>
     <summary lang="de_de">Zugriff auf die Mediathek von 3sat, ARD, Arte, BR, DW, HR, KIKA, MDR, NDR, ORF, Phoenix, RBB, SR, SRF, SWR, WDR und ZDF.</summary>
-    <description lang="de_de">Mit Mediathek Direkt können Sie sich die Inhalte der Online-Mediatheken verschiedener Sender (3sat, ARD, Arte, BR, DW, HR, KIKA, MDR, NDR, ORF, Phoenix, RBB, SR, SRF, SWR, , WDR, ZDF) ansehen.</description>
+    <description lang="de_de">Mit Mediathek Direkt können Sie sich die Inhalte der Online-Mediatheken verschiedener Sender (3sat, ARD, Arte, BR, DW, HR, KIKA, MDR, NDR, ORF, Phoenix, RBB, SR, SRF, SWR, WDR, ZDF) ansehen.</description>
     <disclaimer lang="de_de">This addon may not work in every country.</disclaimer>
     <language></language>
     <platform>all</platform>
     <license></license>
-    <forum>http://zdfmediathk.sourceforge.net/forum/</forum>
-    <website>http://zdfmediathk.sourceforge.net</website>
+    <forum>https://forum.mediathekview.de/</forum>
+    <website>mediathekview.de</website>
     <email></email>
-    <source>https://bitbucket.org/P_Aeh/plugin.video.mediathekdirekt</source>
+    <source>https://github.com/dojomo/plugin.video.mediathekdirekt</source>
     <news></news>
   </extension>
 </addon>
