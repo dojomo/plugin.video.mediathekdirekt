@@ -10,7 +10,11 @@
   <string id="30008">Sendungen von heute</string>
   <string id="30009">Sendungen von gestern</string>
   <string id="30010">Alle Themen</string>
+  <string id="30100">Sendung herunterladen</string>
+  <string id="30101">Sendung gespeichert unter:</string>
+  <string id="30102">Zielordner wählen</string>
   <string id="32100">Allgemeines</string>
   <string id="32101">Zeitintervall Datenupdate in Min</string>
   <string id="32102">Direkt alle Themen anzeigen</string>
+  <string id="32103">Sendungen mit Hörfassung & Audiodeskreption in Titel oder Beschreibung nicht anzeigen</string>
 </strings>

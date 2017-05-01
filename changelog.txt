@@ -13,3 +13,7 @@
 -Fixed search via numeric Dialog for dates with zero-padding.
 0.0.6
 -Fixed encoding error when trying to search with special characters.
+0.0.7
+-Added context menu button "download video" to video. It allows to download the choosen video to a local folder.
+-Added Setting to hide shows with audio description.
+-Added airdate of a show to the beginning of the video description.

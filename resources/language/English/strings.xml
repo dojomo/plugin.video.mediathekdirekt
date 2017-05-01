@@ -10,7 +10,11 @@
   <string id="30008">Today's shows</string>
   <string id="30009">Yesterday's shows</string>
   <string id="30010">All Topics</string>
+  <string id="30100">Download show</string>
+  <string id="30101">Show saved at:</string>
+  <string id="30102">Select destination folder</string>
   <string id="32100">General</string>
   <string id="32101">time interval Data Update in Min</string>
   <string id="32102">Show all topics directly</string>
+  <string id="32103">Hide shows if title or topic contain audio description</string>
 </strings>

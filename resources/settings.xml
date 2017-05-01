@@ -4,5 +4,7 @@
   		<setting label="32101" type="slider" id="maxFileAge" default="30" range="15,15,1440" option="int" />
   		<setting type="sep"/>
   		<setting label="32102" type="bool" id="showTopicsDirectly" default="false"/>
+  		<setting type="sep"/>
+  		<setting label="32103" type="bool" id="hideAD" default="false"/>
   	</category>
 </settings>
