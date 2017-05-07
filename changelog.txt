@@ -20,3 +20,5 @@
 0.0.8
 -Duration is now shown correctly in media lists
 -Every media list is now sortable by default, label, date, play count, duration or genre in abscending or descending order.
+0.0.9
+-Added setting "Play videos in best possible quality". If activated the addon now detects the best Stream Quality (mostly HD).

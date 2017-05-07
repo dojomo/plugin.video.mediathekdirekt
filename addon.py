@@ -18,10 +18,12 @@ defaultFanart = os.path.join(addonDir,'resources/ard_fanart.jpg')
 icon = os.path.join(addonDir,'icon.png')
 addon_work_folder = xbmc.translatePath("special://profile/addon_data/" + addonID)
 jsonFile = xbmc.translatePath("special://profile/addon_data/" + addonID + "/good.json")
+#maxFileAge = int(addon.getSetting("maxFileAge"))
 maxFileAge = int(addon.getSetting("maxFileAge"))
 maxFileAge = maxFileAge*60
 showTopicsDirectly = str(addon.getSetting("showTopicsDirectly")).lower()
 hideAD = str(addon.getSetting("hideAD")).lower()
+playBestQuality = str(addon.getSetting("playBestQuality")).lower()
 
 if not os.path.isdir(addon_work_folder):
     os.mkdir(addon_work_folder)
@@ -444,7 +446,24 @@ def updateData():
     target = urllib.URLopener()
     target.retrieve("http://www.mediathekdirekt.de/good.json", jsonFile)
 
+def getBestQuality(video_url):
+    if playBestQuality == "true":
+        #list [start_url, hq_url, hdURL]
+        urls = [video_url,"",""];
+        #create hqURL
+        urls[1] = urls[0].replace('1456k_p13v11', '2328k_p35v11').replace('1456k_p13v12', '2328k_p35v12').replace('1496k_p13v13', '2328k_p35v13').replace('2256k_p14v11', '2328k_p35v11').replace('2256k_p14v12', '2328k_p35v12').replace('2296k_p14v13', '2328k_p35v13')
+        urls[2] = urls[1].replace('2328k_p35v12', '3328k_p36v12').replace('2328k_p35v13', '3328k_p36v13').replace('.hq.mp4', '.hd.mp4').replace('.l.mp4', '.xl.mp4').replace('_C.mp4', '_X.mp4')
+        for entry in reversed(urls):
+            if len(entry) > 0:
+                #check if file exists
+                code = urllib.urlopen(entry).getcode()
+                if str(code) == "200":
+                    return entry
+    return video_url
+
 def downloadFile(video_url):
+    #get best qualiy url
+    bq_url = getBestQuality(video_url)
     #get filname from video_url
     filename = video_url.split('/')[-1]
     filetype = filename.split('.')[-1]
@@ -454,7 +473,7 @@ def downloadFile(video_url):
     target = urllib.URLopener()
     fullPath = xbmc.translatePath(download_dir+filename)
     target.retrieve(video_url,fullPath)
-    xbmcgui.Dialog().ok(addonID, translation(30101), str(fullPath))
+    dialog.ok(addonID, translation(30101), str(fullPath))
 
 #getData() returns all entrys of json file
 #entry[0] = channel
@@ -518,11 +537,11 @@ def addVideo(entry):
         if (len(duration) == 8):
             duration = str(int(duration[:2])*60*60 + int(duration[3:5])*60 + int(duration[-2:]))
         description = "["+date +"] "+entry[5]+"..."
-        url = entry[6]
+        url = getBestQuality(entry[6])
         link = entry[7]
         fanart = getFanart(channel)
         li = xbmcgui.ListItem(title)
-        li.setInfo(type="Video", infoLabels={"Title": title, "date": date, "dateadded": dateadded, "Duration": duration, "Genre": topic, "Year": year, "PlotOutline": description, "Plot": description, "Studio": channel, "premiered": premiered, "aired": premiered, "dateadded": premiered+' '+duration})
+        li.setInfo(type="Video", infoLabels={"Title": title, "date": date, "dateadded": dateadded, "Duration": duration, "Genre": topic, "Year": year, "PlotOutline": description, "Plot": description, "Studio": channel, "premiered": premiered, "aired": premiered, "dateadded": dateadded})
         li.setArt({'thumb': fanart})
         li.setProperty("fanart_image", fanart)
         li.setProperty('IsPlayable', 'true')

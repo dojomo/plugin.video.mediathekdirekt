@@ -16,5 +16,6 @@
   <string id="32100">Allgemeines</string>
   <string id="32101">Zeitintervall Datenupdate in Min</string>
   <string id="32102">Direkt alle Themen anzeigen</string>
-  <string id="32103">Sendungen mit Hörfassung & Audiodeskreption in Titel oder Beschreibung nicht anzeigen</string>
+  <string id="32103">Sendungen mit Hörfassung Audiodeskreption in Titel oder Beschreibung nicht anzeigen</string>
+  <string id="32104">Videos immer in bester Qualität abspielen</string>
 </strings>
