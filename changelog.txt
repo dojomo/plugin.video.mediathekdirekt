@@ -22,3 +22,5 @@
 -Every media list is now sortable by default, label, date, play count, duration or genre in abscending or descending order.
 0.0.9
 -Added setting "Play videos in best possible quality". If activated the addon now detects the best Stream Quality (mostly HD).
+0.0.10
+-ARD-Streams can now be played in HD, too.

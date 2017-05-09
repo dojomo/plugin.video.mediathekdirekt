@@ -18,7 +18,6 @@ defaultFanart = os.path.join(addonDir,'resources/ard_fanart.jpg')
 icon = os.path.join(addonDir,'icon.png')
 addon_work_folder = xbmc.translatePath("special://profile/addon_data/" + addonID)
 jsonFile = xbmc.translatePath("special://profile/addon_data/" + addonID + "/good.json")
-#maxFileAge = int(addon.getSetting("maxFileAge"))
 maxFileAge = int(addon.getSetting("maxFileAge"))
 maxFileAge = maxFileAge*60
 showTopicsDirectly = str(addon.getSetting("showTopicsDirectly")).lower()
@@ -453,6 +452,8 @@ def getBestQuality(video_url):
         #create hqURL
         urls[1] = urls[0].replace('1456k_p13v11', '2328k_p35v11').replace('1456k_p13v12', '2328k_p35v12').replace('1496k_p13v13', '2328k_p35v13').replace('2256k_p14v11', '2328k_p35v11').replace('2256k_p14v12', '2328k_p35v12').replace('2296k_p14v13', '2328k_p35v13')
         urls[2] = urls[1].replace('2328k_p35v12', '3328k_p36v12').replace('2328k_p35v13', '3328k_p36v13').replace('.hq.mp4', '.hd.mp4').replace('.l.mp4', '.xl.mp4').replace('_C.mp4', '_X.mp4')
+        if("pd-videos.daserste.de/" in urls[1]):
+            urls[2] = urls[1].replace('/960-1.mp4','/1280-1.mp4')
         for entry in reversed(urls):
             if len(entry) > 0:
                 #check if file exists
