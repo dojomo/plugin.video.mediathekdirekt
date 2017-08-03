@@ -23,7 +23,7 @@ maxFileAge = maxFileAge*60
 showTopicsDirectly = str(addon.getSetting("showTopicsDirectly")).lower()
 hideAD = str(addon.getSetting("hideAD")).lower()
 playBestQuality = str(addon.getSetting("playBestQuality")).lower()
-updateURL = 'http://www.mediathekdirekt.de/good.json'
+updateURL = 'https://www.mediathekdirekt.de/good.json'
 
 if not os.path.isdir(addon_work_folder):
     os.mkdir(addon_work_folder)
