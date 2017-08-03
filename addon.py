@@ -23,6 +23,7 @@ maxFileAge = maxFileAge*60
 showTopicsDirectly = str(addon.getSetting("showTopicsDirectly")).lower()
 hideAD = str(addon.getSetting("hideAD")).lower()
 playBestQuality = str(addon.getSetting("playBestQuality")).lower()
+updateURL = 'https://www.mediathekdirekt.de/good.json'
 
 if not os.path.isdir(addon_work_folder):
     os.mkdir(addon_work_folder)
@@ -443,7 +444,12 @@ def searchDate(channelDate = ""):
 
 def updateData():
     target = urllib.URLopener()
-    target.retrieve("http://www.mediathekdirekt.de/good.json", jsonFile)
+    try:
+        target.retrieve(updateURL, jsonFile)
+    except IOError as ioerr:
+        dialog = xbmcgui.Dialog()
+        dialog.notification('Error updating database', str(ioerr) + ' Update-URL: ' + updateURL, xbmcgui.NOTIFICATION_ERROR, 30000)
+        exit(1)
 
 def getBestQuality(video_url):
     if playBestQuality == "true":
@@ -494,9 +500,14 @@ def getData():
         if now-fileTime > maxFileAge:
             updateData()
 
-    with open(jsonFile, 'r') as f:
-        data = json.load(f)
-        return data
+    try:
+        with open(jsonFile, 'r') as f:
+            data = json.load(f)
+            return data
+    except IOError as ioerr:
+        dialog = xbmcgui.Dialog()
+        dialog.notification('Error reading database', str(ioerr), xbmcgui.NOTIFICATION_ERROR, 20000)
+        exit(1)
 
 def getFanart(channel):
     channel = channel.replace(' ', "").lower()
