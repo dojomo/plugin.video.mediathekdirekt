@@ -500,9 +500,14 @@ def getData():
         if now-fileTime > maxFileAge:
             updateData()
 
-    with open(jsonFile, 'r') as f:
-        data = json.load(f)
-        return data
+    try:
+        with open(jsonFile, 'r') as f:
+            data = json.load(f)
+            return data
+    except IOError as ioerr:
+        dialog = xbmcgui.Dialog()
+        dialog.notification('Error reading database', str(ioerr), xbmcgui.NOTIFICATION_ERROR, 20000)
+        exit(1)
 
 def getFanart(channel):
     channel = channel.replace(' ', "").lower()
