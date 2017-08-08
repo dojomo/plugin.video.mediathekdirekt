@@ -443,7 +443,7 @@ def searchDate(channelDate = ""):
 
 def updateData():
     target = urllib.URLopener()
-    target.retrieve("http://www.mediathekdirekt.de/good.json", jsonFile)
+    target.retrieve("https://www.mediathekdirekt.de/good.json", jsonFile)
 
 def getBestQuality(video_url):
     if playBestQuality == "true":
