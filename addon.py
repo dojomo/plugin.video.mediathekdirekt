@@ -447,13 +447,43 @@ def updateData():
 
 def getBestQuality(video_url):
     if playBestQuality == "true":
-        #list [start_url, hq_url, hdURL]
-        urls = [video_url,"",""];
+        #list [start_url, hq_url, alternative_hq_url, hdURLfromHQurl, althdURLfromHQUrl, hdURLfromAltHqUrl, altHDUrlFromAltHQUrl]
+        urls = [video_url,"","","","","",""];
         #create hqURL
-        urls[1] = urls[0].replace('1456k_p13v11', '2328k_p35v11').replace('1456k_p13v12', '2328k_p35v12').replace('1496k_p13v13', '2328k_p35v13').replace('2256k_p14v11', '2328k_p35v11').replace('2256k_p14v12', '2328k_p35v12').replace('2296k_p14v13', '2328k_p35v13')
-        urls[2] = urls[1].replace('2328k_p35v12', '3328k_p36v12').replace('2328k_p35v13', '3328k_p36v13').replace('.hq.mp4', '.hd.mp4').replace('.l.mp4', '.xl.mp4').replace('_C.mp4', '_X.mp4')
-        if("pd-videos.daserste.de/" in urls[1]):
-            urls[2] = urls[1].replace('/960-1.mp4','/1280-1.mp4')
+        #zdfmediathek //erst drei stndardfaelle in urls[1], dann drei moeglichkeiten mit alternative in alternative_hq_url
+        urls[1] = urls[0].replace('2256k_p14v11','2328k_p35v11').replace('2256k_p14v12','2328k_p35v12').replace('2296k_p14v13','2328k_p35v13').replace('1456k_p13v11', '2328k_p35v11').replace('1456k_p13v12','2328k_p35v12').replace('1496k_p13v13','2328k_p35v13')
+        urls[2] = urls[0].replace('1456k_p13v11', '2256k_p14v11').replace('1456k_p13v12','2256k_p14v12').replace('1496k_p13v13','2296k_p14v13')
+        urls[3] = urls[1].replace('1456k_p13v12','3328k_p36v12').replace('2256k_p14v12','3328k_p36v12').replace('2328k_p35v12','3328k_p36v12').replace('1496k_p13v13','3296k_p15v13').replace('2296k_p14v13','3296k_p15v13').replace('2328k_p35v13','3296k_p15v13').replace('1496k_p13v14','3328k_p36v14').replace('2296k_p14v14','3328k_p36v14').replace('2328k_p35v14','3328k_p36v14')
+        urls[4] = urls[1].replace('1456k_p13v12','3256k_p15v12').replace('2256k_p14v12','3256k_p15v12').replace('2328k_p35v12','3256k_p15v12').replace('1496k_p13v13','3328k_p36v13').replace('2296k_p14v13','3328k_p36v13').replace('2328k_p35v13','3328k_p36v13').replace('1496k_p13v14','3328k_p35v14').replace('2296k_p14v14','3328k_p35v14').replace('2328k_p35v14','3328k_p35v14')
+        if(("pd-videos.daserste.de/" in urls[1]) or ("pdvideosdaserste" in urls[1])):
+            #ardmediathek wir aendern 4 weil der letzte Eintrag zuletzt geprueft wird
+            urls[4] = urls[1].replace('/960-','/1280-')
+        if(".br.de/" in urls[1]):
+            #br mediathek
+            urls[4] = urls[1].replace('_C.mp4','_X.mp4')
+        if(("tvdownloaddw" in urls[1]) or ("tv-download.dw.com" in urls[1])):
+            #dw mediathek
+            #hq version
+            urls[3] = urls[1].replace('_vp6.flv','_sor.mp4')
+            #hd version
+            urls[4] = urls[3].replace('_sor.mp4','_avc.mp4')
+        if("pmdonlinekika" in urls[1]):
+            #kika
+            urls[4] = urls[1].replace('-31e0be270130_','-5a2c8da1cdb7_')
+        if("odmdr" in urls[1]):
+            #mdr
+            urls[4] = urls[1].replace('-730aae549c28_','-be7c2950aac6_')
+        if("media.ndr.de" in urls[1] or "mediandr" in urls[1]):
+            #ndr
+            urls[4] = urls[1].replace('.hq.mp4','.hd.mp4')
+        if("hdvodsrforigin" in urls[1]):
+            #srf
+            urls[4] = urls[1].replace('/index_4_av.m3u8','index_5_av.m3u8')
+        if("pdodswr" in urls[1]):
+            urls[4] = urls[1].replace('.l.mp4','.xl.mp4')
+        if("wdradaptiv" in urls[1]):
+            #wdr
+            urls[4] = urls[1].replace('/index_2_av.m3u8','/index_4_av.m3u8')
         for entry in reversed(urls):
             if len(entry) > 0:
                 #check if file exists
