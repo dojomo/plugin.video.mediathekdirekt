@@ -7,6 +7,7 @@ import urllib
 import json
 import re
 import time
+import requests
 from datetime import date, timedelta
 
 addonID = 'plugin.video.mediathekdirekt'
@@ -17,6 +18,7 @@ addonDir = xbmc.translatePath(addon.getAddonInfo('path'))
 defaultFanart = os.path.join(addonDir,'resources/ard_fanart.jpg')
 icon = os.path.join(addonDir,'icon.png')
 addon_work_folder = xbmc.translatePath("special://profile/addon_data/" + addonID)
+jsonFileGZ = xbmc.translatePath("special://profile/addon_data/" + addonID + "/good.json.gz")
 jsonFile = xbmc.translatePath("special://profile/addon_data/" + addonID + "/good.json")
 maxFileAge = int(addon.getSetting("maxFileAge"))
 maxFileAge = maxFileAge*60
@@ -442,9 +444,11 @@ def searchDate(channelDate = ""):
     endOfDirectory()
 
 def updateData():
-    target = urllib.URLopener()
-    target.retrieve("https://www.mediathekdirekt.de/good.json", jsonFile)
-
+    #target = urllib.URLopener()
+    #target.retrieve("https://www.mediathekdirekt.de/good.json.gz", jsonFileGZ)
+    r = requests.get("https://www.mediathekdirekt.de/good.json")
+    with open(jsonFile, 'wb') as fd:
+        fd.write(r.text)
 def getBestQuality(video_url):
     if playBestQuality == "true":
         #list [start_url, hq_url, alternative_hq_url, hdURLfromHQurl, althdURLfromHQUrl, hdURLfromAltHqUrl, altHDUrlFromAltHQUrl]

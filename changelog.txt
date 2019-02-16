@@ -27,4 +27,6 @@
 0.0.11
 -Changed source web address to https.
 0.0.12
-- Fixed and updated getBestQuality function to detect new and more HD streams. 
+- Fixed and updated getBestQuality function to detect new and more HD streams.
+0.0.13
+- Fixed data update error because of gzip compression. Now uses script.module.requests to download and decompress data file.
