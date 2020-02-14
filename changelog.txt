@@ -30,3 +30,6 @@
 - Fixed and updated getBestQuality function to detect new and more HD streams.
 0.0.13
 - Fixed data update error because of gzip compression. Now uses script.module.requests to download and decompress data file.
+0.0.14
+- Backenddesign changed. Fixed app to work again
+- All streams available in HD in the media libraries can be streamed in HD now, too

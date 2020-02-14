@@ -25,6 +25,22 @@ maxFileAge = maxFileAge*60
 showTopicsDirectly = str(addon.getSetting("showTopicsDirectly")).lower()
 hideAD = str(addon.getSetting("hideAD")).lower()
 playBestQuality = str(addon.getSetting("playBestQuality")).lower()
+#getData() returns all entrys of json file
+#entry[0] = channel
+CHANNEL = 0
+#entry[1] = title
+TITLE = 1
+#entry[2] = topic
+TOPIC = 2
+#entry[3] = date (DD.MM.YYYY)
+DATE = 3
+#entry[4] = time (HH:MM:SS)
+DURATION = 4
+#entry[5] = full_video_url
+URL = 5
+#entry[6] = weblink_url
+#entry[7] = hd_url (#Pos where to append new_hd_ending in full_video_url|new_hd_ending)
+HD = 7
 
 if not os.path.isdir(addon_work_folder):
     os.mkdir(addon_work_folder)
@@ -33,8 +49,8 @@ def index():
     data = getData()
     channels = []
     for entry in data:
-        if entry[0] not in channels:
-            channels.append(entry[0])
+        if entry[CHANNEL] not in channels:
+            channels.append(entry[CHANNEL])
     length = len(channels) + 3;
     addDir(translation(30001), '', 'search', '', length)
     if showTopicsDirectly == "true":
@@ -69,19 +85,19 @@ def sortByYears(channel = ""):
     data = getData()
     result = []
     for entry in data:
-        date = entry[3].split('.')
+        date = entry[DATE].split('.')
         if len(date) > 2:
             if date[2] not in result:
                 if channel != "":
-                    if entry[0] == channel:
+                    if entry[CHANNEL] == channel:
                         if hideAD == "true":
-                            if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                            if "rfassung" not in entry[TITLE].lower() and "audiodeskription" not in entry[TITLE].lower() and "AD |" not in entry[TITLE] and "(AD)" not in entry[TITLE]:
                                 result.append(date[2])
                         else:
                             result.append(date[2])
                 else:
                     if hideAD == true:
-                        if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                        if "rfassung" not in entry[TITLE].lower() and "audiodeskription" not in entry[TITLE].lower() and "AD |" not in entry[TITLE] and "(AD)" not in entry[TITLE]:
                             result.append(date[2])
                     else:
                         result.append(date[2])
@@ -102,13 +118,13 @@ def sortByMonths(channelYear = ""):
         channel = params[0]
         year = params[1]
     for entry in data:
-        if entry[0] == channel:
-            date = entry[3].split('.')
+        if entry[CHANNEL] == channel:
+            date = entry[DATE].split('.')
             if len(date) > 2:
                 if date[2] == year:
                     if date[1]+'.'+date[2] not in result:
                         if hideAD == "true":
-                            if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                            if "rfassung" not in entry[TITLE].lower() and "audiodeskription" not in entry[TITLE].lower() and "AD |" not in entry[TITLE] and "(AD)" not in entry[TITLE]:
                                 result.append(date[1]+'.'+date[2])
                         else:
                             result.append(date[1]+'.'+date[2])
@@ -127,13 +143,13 @@ def sortByDays(channelMMYY = ""):
         channel = params[0]
         mmYY = params[1]
     for entry in data:
-        if entry[0] == channel:
-            date = entry[3].split('.',1)
+        if entry[CHANNEL] == channel:
+            date = entry[DATE].split('.',1)
             if len(date) > 1:
                 if date[1] == mmYY:
                     if date[0]+'.'+date[1] not in result:
                         if hideAD == "true":
-                            if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                            if "rfassung" not in entry[TITLE].lower() and "audiodeskription" not in entry[TITLE].lower() and "AD |" not in entry[TITLE] and "(AD)" not in entry[TITLE]:
                                 result.append(date[0]+'.'+date[1])
                         else:
                             result.append(date[0]+'.'+date[1])
@@ -154,10 +170,10 @@ def showDay(channelDate):
         channel = params[0]
         date = params[1]
     for entry in data:
-        if entry[0] == channel:
-            if entry[3] == date:
+        if entry[CHANNEL] == channel:
+            if entry[DATE] == date:
                 if hideAD == "true":
-                    if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                    if "rfassung" not in entry[TITLE].lower() and "audiodeskription" not in entry[TITLE].lower() and "AD |" not in entry[TITLE] and "(AD)" not in entry[TITLE]:
                         result.append(entry)
                 else:
                     result.append(entry)
@@ -172,14 +188,14 @@ def sortTitleInitials(channel = ""):
     fanart = getFanart(channel)
     if channel != "":
         for entry in data:
-            if entry[0] == channel:
-                if len(entry[1]) > 0:
-                    l = entry[1][0].upper()
+            if entry[CHANNEL] == channel:
+                if len(entry[TITLE]) > 0:
+                    l = entry[TITLE][0].upper()
                     if not re.match('^([a-z|A-Z])',l):
                         l = '#'
                     if l not in result:
                         if hideAD == "true":
-                            if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                            if "rfassung" not in entry[TITLE].lower() and "audiodeskription" not in entry[TITLE].lower() and "AD |" not in entry[TITLE] and "(AD)" not in entry[TITLE]:
                                 result.append(l)
                         else:
                             result.append(l)
@@ -195,25 +211,25 @@ def sortTopicsInitials(channel = ""):
     fanart = getFanart(channel)
     for entry in data:
         if channel != "":
-            if entry[0] == channel:
-                if len(entry[2]) > 0:
-                    l = entry[2][0].upper()
+            if entry[CHANNEL] == channel:
+                if len(entry[TOPIC]) > 0:
+                    l = entry[TOPIC][0].upper()
                     if not re.match('^([a-z|A-Z])',l):
                         l = '#'
                     if l not in result:
                         if hideAD == "true":
-                            if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                            if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
                                 result.append(l)
                         else:
                             result.append(l)
         else:
-            if len(entry[2]) > 0:
-                l = entry[2][0].upper()
+            if len(entry[TOPIC]) > 0:
+                l = entry[TOPIC][0].upper()
                 if not re.match('^([a-z|A-Z])',l):
                     l = '#'
                 if l not in result:
                     if hideAD == "true":
-                        if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                        if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
                             result.append(l)
                     else:
                         result.append(l)
@@ -235,23 +251,23 @@ def sortTitles(channelInitial="|"):
     fanart = getFanart(channel)
     if channel != "":
         for entry in data:
-            if entry[0] == channel:
-                i = entry[1][0].upper()
+            if entry[CHANNEL] == channel:
+                i = entry[TITLE][0].upper()
                 if initial == '#':
                     if not re.match('^([a-z|A-Z])', i):
                         if hideAD == "true":
-                            if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                            if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
                                 result.append(entry)
                         else:
                             result.append(entry)
                 else:
                     if initial == i:
                         if hideAD == "true":
-                            if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                            if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
                                 result.append(entry)
                         else:
                             result.append(entry)
-    result.sort(key=lambda entry: entry[1].lower())
+    result.sort(key=lambda entry: entry[TITLE].lower())
     for entry in result:
         addVideo(entry)
     endOfDirectory()
@@ -277,56 +293,56 @@ def sortTopics(channelInitial="|"):
     fanart = getFanart(channel)
     for entry in data:
         if channel != "":
-            if entry[0] == channel:
-                i = entry[2][0].upper()
+            if entry[CHANNEL] == channel:
+                i = entry[TOPIC][0].upper()
                 if initial == '#':
                     if not re.match('^([a-z|A-Z])', i):
-                        if entry[2] not in result:
+                        if entry[TOPIC] not in result:
                             if hideAD == "true":
-                                if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
-                                    result.append(entry[2])
+                                if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
+                                    result.append(entry[TOPIC])
                             else:
-                                result.append(entry[2])
+                                result.append(entry[TOPIC])
                 elif (initial == "") and (showTopicsDirectly == "true"):
-                    if entry[2] not in result:
+                    if entry[TOPIC] not in result:
                         if hideAD == "true":
-                            if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
-                                result.append(entry[2])
+                            if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
+                                result.append(entry[TOPIC])
                         else:
-                            result.append(entry[2])
+                            result.append(entry[TOPIC])
                 else:
                     if initial == i:
-                        if entry[2] not in result:
+                        if entry[TOPIC] not in result:
                             if hideAD == "true":
-                                if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
-                                    result.append(entry[2])
+                                if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
+                                    result.append(entry[TOPIC])
                             else:
-                                result.append(entry[2])
+                                result.append(entry[TOPIC])
         else:
-            i = entry[2][0].upper()
+            i = entry[TOPIC][0].upper()
             if initial == '#':
                 if not re.match('^([a-z|A-Z])', i):
-                    if entry[2] not in result:
+                    if entry[TOPIC] not in result:
                         if hideAD == "true":
-                            if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
-                                result.append(entry[2])
+                            if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
+                                result.append(entry[TOPIC])
                         else:
-                            result.append(entry[2])
+                            result.append(entry[TOPIC])
             elif (initial == "") and (showTopicsDirectly == "true"):
-                if entry[2] not in result:
+                if entry[TOPIC] not in result:
                     if hideAD == "true":
-                        if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
-                            result.append(entry[2])
+                        if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
+                            result.append(entry[TOPIC])
                     else:
-                        result.append(entry[2])
+                        result.append(entry[TOPIC])
             else:
                 if initial == i:
-                    if entry[2] not in result:
+                    if entry[TOPIC] not in result:
                         if hideAD == "true":
-                            if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
-                                result.append(entry[2])
+                            if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
+                                result.append(entry[TOPIC])
                         else:
-                            result.append(entry[2])
+                            result.append(entry[TOPIC])
     result.sort(key=lambda entry: entry.lower())
     for entry in result:
         addDir(entry.encode('utf8'), channel.encode('utf8')+'|'+entry.encode('utf8'), 'sortTopic', fanart, len(result))
@@ -345,21 +361,21 @@ def sortTopic(channelTopic = "|"):
     fanart = getFanart(channel)
     for entry in data:
         if channel != "":
-            if entry[0] == channel:
-                if entry[2].encode('utf8') == topic:
+            if entry[CHANNEL] == channel:
+                if entry[TOPIC].encode('utf8') == topic:
                     if hideAD == "true":
-                        if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                        if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
                             result.append(entry)
                     else:
                         result.append(entry)
         else:
-            if entry[2].encode('utf8') == topic:
+            if entry[TOPIC].encode('utf8') == topic:
                 if hideAD == "true":
-                    if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                    if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
                         result.append(entry)
                 else:
                     result.append(entry)
-    result.sort(key=lambda entry: entry[1].lower())
+    result.sort(key=lambda entry: entry[TITLE].lower())
     for entry in result:
         addVideo(entry)
     endOfDirectory()
@@ -376,39 +392,39 @@ def search(channel=""):
             data = getData()
             for entry in data:
                 cEntry = entry
-                if search_string in cEntry[1].encode('utf8').lower():
+                if search_string in cEntry[TITLE].encode('utf8').lower():
                     if channel != "":
-                        if cEntry[0] == channel:
-                            cEntry[1] = cEntry[2]+': '+cEntry[1]
+                        if cEntry[CHANNEL] == channel:
+                            cEntry[TITLE] = cEntry[TOPIC]+': '+cEntry[TITLE]
                             if hideAD == "true":
-                                if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                                if "rfassung" not in cEntry[TITLE].lower() and "audiodeskription" not in cEntry[TITLE].lower() and "AD |" not in cEntry[TITLE] and "(AD)" not in cEntry[TITLE]:
                                     result.append(cEntry)
                             else:
                                 result.append(cEntry)
                     else:
-                        cEntry[1] = cEntry[2]+': '+cEntry[1]
+                        cEntry[TITLE] = cEntry[TOPIC]+': '+cEntry[TITLE]
                         if hideAD == "true":
-                            if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                            if "rfassung" not in cEntry[TITLE].lower() and "audiodeskription" not in cEntry[TITLE].lower() and "AD |" not in cEntry[TITLE] and "(AD)" not in cEntry[TITLE]:
                                 result.append(cEntry)
                         else:
                             result.append(cEntry)
-                elif search_string in cEntry[2].encode('utf8').lower():
+                elif search_string in cEntry[TOPIC].encode('utf8').lower():
                     if channel != "":
-                        if cEntry[0] == channel:
-                            cEntry[1] = cEntry[2]+': '+cEntry[1]
+                        if cEntry[CHANNEL] == channel:
+                            cEntry[TITLE] = cEntry[TOPIC]+': '+cEntry[TITLE]
                             if hideAD == "true":
-                                if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                                if "rfassung" not in cEntry[TITLE].lower() and "audiodeskription" not in cEntry[TITLE].lower() and "AD |" not in cEntry[TITLE] and "(AD)" not in cEntry[TITLE]:
                                     result.append(cEntry)
                             else:
                                 result.append(cEntry)
                     else:
-                        cEntry[1] = cEntry[2]+': '+cEntry[1]
+                        cEntry[TITLE] = cEntry[TOPIC]+': '+cEntry[TITLE]
                         if hideAD == "true":
-                            if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                            if "rfassung" not in cEntry[TITLE].lower() and "audiodeskription" not in cEntry[TITLE].lower() and "AD |" not in cEntry[TITLE] and "(AD)" not in cEntry[TITLE]:
                                 result.append(cEntry)
                         else:
                             result.append(cEntry)
-            result.sort(key=lambda entry: entry[1].lower())
+            result.sort(key=lambda entry: entry[TITLE].lower())
             for entry in result:
                 addVideo(entry)
         endOfDirectory()
@@ -431,14 +447,14 @@ def searchDate(channelDate = ""):
         data = getData()
         for entry in data:
             cEntry = entry
-            if (entry[0] == channel) and (entry[3] == date):
-                cEntry[1] = cEntry[2]+': '+cEntry[1]
+            if (entry[CHANNEL] == channel) and (entry[DATE] == date):
+                cEntry[1] = cEntry[TOPIC]+': '+cEntry[TITLE]
                 if hideAD == "true":
-                    if "rfassung" not in entry[1].lower() and "rfassung" not in entry[5].lower() and "audiodeskription" not in entry[1].lower() and "audiodeskription" not in entry[5].lower() and "AD |" not in entry[1] and "AD |" not in entry[5] and "(AD)" not in entry[1] and "(AD)" not in entry[5]:
+                    if "rfassung" not in cEntry[TITLE].lower() and "audiodeskription" not in cEntry[TITLE].lower() and "AD |" not in cEntry[TITLE] and "(AD)" not in cEntry[TITLE]:
                         result.append(cEntry)
                 else:
                     result.append(cEntry)
-            result.sort(key=lambda entry: entry[1].lower())
+            result.sort(key=lambda entry: entry[TITLE].lower())
         for entry in result:
             addVideo(entry)
     endOfDirectory()
@@ -449,56 +465,26 @@ def updateData():
     r = requests.get("https://www.mediathekdirekt.de/good.json")
     with open(jsonFile, 'wb') as fd:
         fd.write(r.text)
-def getBestQuality(video_url):
+def getBestQuality(entry):
     if playBestQuality == "true":
-        #list [start_url, hq_url, alternative_hq_url, hdURLfromHQurl, althdURLfromHQUrl, hdURLfromAltHqUrl, altHDUrlFromAltHQUrl]
-        urls = [video_url,"","","","","",""];
-        #create hqURL
-        #zdfmediathek //erst drei stndardfaelle in urls[1], dann drei moeglichkeiten mit alternative in alternative_hq_url
-        urls[1] = urls[0].replace('2256k_p14v11','2328k_p35v11').replace('2256k_p14v12','2328k_p35v12').replace('2296k_p14v13','2328k_p35v13').replace('1456k_p13v11', '2328k_p35v11').replace('1456k_p13v12','2328k_p35v12').replace('1496k_p13v13','2328k_p35v13')
-        urls[2] = urls[0].replace('1456k_p13v11', '2256k_p14v11').replace('1456k_p13v12','2256k_p14v12').replace('1496k_p13v13','2296k_p14v13')
-        urls[3] = urls[1].replace('1456k_p13v12','3328k_p36v12').replace('2256k_p14v12','3328k_p36v12').replace('2328k_p35v12','3328k_p36v12').replace('1496k_p13v13','3296k_p15v13').replace('2296k_p14v13','3296k_p15v13').replace('2328k_p35v13','3296k_p15v13').replace('1496k_p13v14','3328k_p36v14').replace('2296k_p14v14','3328k_p36v14').replace('2328k_p35v14','3328k_p36v14')
-        urls[4] = urls[1].replace('1456k_p13v12','3256k_p15v12').replace('2256k_p14v12','3256k_p15v12').replace('2328k_p35v12','3256k_p15v12').replace('1496k_p13v13','3328k_p36v13').replace('2296k_p14v13','3328k_p36v13').replace('2328k_p35v13','3328k_p36v13').replace('1496k_p13v14','3328k_p35v14').replace('2296k_p14v14','3328k_p35v14').replace('2328k_p35v14','3328k_p35v14')
-        if(("pd-videos.daserste.de/" in urls[1]) or ("pdvideosdaserste" in urls[1])):
-            #ardmediathek wir aendern 4 weil der letzte Eintrag zuletzt geprueft wird
-            urls[4] = urls[1].replace('/960-','/1280-')
-        if(".br.de/" in urls[1]):
-            #br mediathek
-            urls[4] = urls[1].replace('_C.mp4','_X.mp4')
-        if(("tvdownloaddw" in urls[1]) or ("tv-download.dw.com" in urls[1])):
-            #dw mediathek
-            #hq version
-            urls[3] = urls[1].replace('_vp6.flv','_sor.mp4')
-            #hd version
-            urls[4] = urls[3].replace('_sor.mp4','_avc.mp4')
-        if("pmdonlinekika" in urls[1]):
-            #kika
-            urls[4] = urls[1].replace('-31e0be270130_','-5a2c8da1cdb7_')
-        if("odmdr" in urls[1]):
-            #mdr
-            urls[4] = urls[1].replace('-730aae549c28_','-be7c2950aac6_')
-        if("media.ndr.de" in urls[1] or "mediandr" in urls[1]):
-            #ndr
-            urls[4] = urls[1].replace('.hq.mp4','.hd.mp4')
-        if("hdvodsrforigin" in urls[1]):
-            #srf
-            urls[4] = urls[1].replace('/index_4_av.m3u8','index_5_av.m3u8')
-        if("pdodswr" in urls[1]):
-            urls[4] = urls[1].replace('.l.mp4','.xl.mp4')
-        if("wdradaptiv" in urls[1]):
-            #wdr
-            urls[4] = urls[1].replace('/index_2_av.m3u8','/index_4_av.m3u8')
+        #list [hq_url, hd_url]
+        urls = [entry[URL],entry[URL]];
+        if len(entry[HD]) > 1:
+            #create hd url
+            params = entry[HD].split('|',1)
+            pos = params[0]
+            urls[1] = urls[0][:int(pos)] + params[1] 
         for entry in reversed(urls):
             if len(entry) > 0:
                 #check if file exists
                 code = urllib.urlopen(entry).getcode()
                 if str(code) == "200":
                     return entry
-    return video_url
+    return entry[URL]
 
 def downloadFile(video_url):
     #get best qualiy url
-    bq_url = getBestQuality(video_url)
+    bq_url = video_url
     #get filname from video_url
     filename = video_url.split('/')[-1]
     filetype = filename.split('.')[-1]
@@ -516,9 +502,9 @@ def downloadFile(video_url):
 #entry[2] = topic
 #entry[3] = date (DD.MM.YYYY)
 #entry[4] = time (HH:MM:SS)
-#entry[5] = description
-#entry[6] = video_url
-#entry[7] = weblink_url
+#entry[5] = full_video_url
+#entry[6] = weblink_url
+#entry[7] = hd_url (#Pos where to append new_hd_ending in full_video_url|new_hd_ending)
 #
 def getData():
     if not os.path.isfile(jsonFile):
@@ -536,9 +522,9 @@ def getData():
 def getFanart(channel):
     channel = channel.replace(' ', "").lower()
     channel = channel.split('.')
-    channel = channel[0]
+    channel = channel[CHANNEL]
     channel = channel.split('-')
-    channel = channel[0];
+    channel = channel[CHANNEL];
     fanart = os.path.join(addonDir,'resources/images/fanart_'+channel+'.jpg');
     if not os.path.isfile(fanart):
         fanart = icon
@@ -559,22 +545,22 @@ def addDir(name, url, mode, iconimage, total=0):
 def addVideo(entry):
     ok = True
     if len(entry) > 7:
-        channel = entry[0]
-        title = entry[1]
-        topic = entry[2]
-        date = entry[3]
+        channel = entry[CHANNEL]
+        title = entry[TITLE]
+        topic = entry[TOPIC]
+        date = entry[DATE]
         year = date.split('.')
         premiered = str(date[2]+'-'+date[1]+'-'+date[0])
         year = date[-4:]
-        duration = entry[4]
+        duration = entry[DURATION]
         #sort by dateadded y-m-d ex: 2009-04-05 23:16:04
         dateadded = premiered+' 00:00:00'
         #duration is given in HH:MM:SS Kodi wants it to be in seconds
         if (len(duration) == 8):
             duration = str(int(duration[:2])*60*60 + int(duration[3:5])*60 + int(duration[-2:]))
-        description = "["+date +"] "+entry[5]+"..."
-        url = getBestQuality(entry[6])
-        link = entry[7]
+        description = "["+date +"] "+"..."
+        url = getBestQuality(entry)
+        #link = entry[7]
         fanart = getFanart(channel)
         li = xbmcgui.ListItem(title)
         li.setInfo(type="Video", infoLabels={"Title": title, "date": date, "dateadded": dateadded, "Duration": duration, "Genre": topic, "Year": year, "PlotOutline": description, "Plot": description, "Studio": channel, "premiered": premiered, "aired": premiered, "dateadded": dateadded})
