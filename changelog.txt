@@ -33,3 +33,5 @@
 0.0.14
 - Backenddesign changed. Fixed app to work again
 - All streams available in HD in the media libraries can be streamed in HD now, too
+0.0.15
+- Update to Kodi Krypton
