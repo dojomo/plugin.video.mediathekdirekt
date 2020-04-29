@@ -1,0 +1,87 @@
+# Kodi Media Center language file
+# Addon Name: Mediathek Direkt
+# Addon id: plugin.video.mediathekdirekt
+# Addon Provider: P_Aeh
+msgid ""
+msgstr ""
+"Project-Id-Version: KODI Addons\n"
+"Report-Msgid-Bugs-To: https://www.kodinerds.net/index.php/Thread/53682-RELEASE-Mediathek-Direkt/ or https://github.com/dojomo/plugin.video.mediathekdirekt/issues\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#Main Menu
+msgctxt "#30001"
+msgid "Global Search"
+msgstr "Globale Suche"
+
+msgctxt "#30002"
+msgid "Search"
+msgstr "Suche"
+
+msgctxt "#30003"
+msgid "By Date"
+msgstr "Nach Datum"
+
+msgctxt "#30004"
+msgid "By Topic"
+msgstr "Nach Thema"
+
+msgctxt "#30005"
+msgid "By Title"
+msgstr "Nach Titel"
+
+msgctxt "#30006"
+msgid "Manual Data Update"
+msgstr "Daten manuell aktualisieren"
+
+msgctxt "#30007"
+msgid "Enter date"
+msgstr "Datum eingeben"
+
+msgctxt "#30008"
+msgid "Today's shows"
+msgstr "Sendungen von heute"
+
+msgctxt "#30009"
+msgid "Yesterday's shows"
+msgstr "Sendungen von gestern"
+
+msgctxt "#30010"
+msgid "All Topics"
+msgstr "Alle Themen"
+
+#Download
+msgctxt "#30100"
+msgid "Download show"
+msgstr "Sendung herunterladen"
+
+msgctxt "#30101"
+msgid "Show saved at:"
+msgstr "Sendung gespeichert unter:"
+
+msgctxt "#30102"
+msgid "Select destination folder"
+msgstr "Zielordner wählen"
+
+#Settings
+msgctxt "32100"
+msgid "General"
+msgstr "Allgemeines"
+
+msgctxt "32101"
+msgid "time interval Data Update in Min"
+msgstr "Zeitintervall Datenupdate in Min"
+
+msgctxt "32102"
+msgid "Show all topics directly"
+msgstr "Direkt alle Themen anzeigen"
+
+msgctxt "32103"
+msgid "Hide shows if title or topic contain audio description"
+msgstr "Sendungen mit Hörfassung Audiodeskreption in Titel oder Beschreibung nicht anzeigen"
+
+msgctxt "32104"
+msgid "Play videos in best possible quality"
+msgstr "Videos immer in bester Qualität abspielen"

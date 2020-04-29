@@ -35,3 +35,7 @@
 - All streams available in HD in the media libraries can be streamed in HD now, too
 0.0.15
 - Update to Kodi Krypton
+1.0.0
+- Updated dependencies
+- Updated code for Phython 3
+- using po files instead of depricated strings.xml for translation

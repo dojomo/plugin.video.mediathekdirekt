@@ -1,0 +1,87 @@
+# Kodi Media Center language file
+# Addon Name: Mediathek Direkt
+# Addon id: plugin.video.mediathekdirekt
+# Addon Provider: P_Aeh
+msgid ""
+msgstr ""
+"Project-Id-Version: KODI Addons\n"
+"Report-Msgid-Bugs-To: https://www.kodinerds.net/index.php/Thread/53682-RELEASE-Mediathek-Direkt/ or https://github.com/dojomo/plugin.video.mediathekdirekt/issues\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_GB\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#Main Menu
+msgctxt "#30001"
+msgid "Global Search"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Search"
+msgstr ""
+
+msgctxt "#30003"
+msgid "By Date"
+msgstr ""
+
+msgctxt "#30004"
+msgid "By Topic"
+msgstr ""
+
+msgctxt "#30005"
+msgid "By Title"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Manual Data Update"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Enter date"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Today's shows"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Yesterday's shows"
+msgstr ""
+
+msgctxt "#30010"
+msgid "All Topics"
+msgstr ""
+
+#Download
+msgctxt "#30100"
+msgid "Download show"
+msgstr ""
+
+msgctxt "#30101"
+msgid "Show saved at:"
+msgstr ""
+
+msgctxt "#30102"
+msgid "Select destination folder"
+msgstr ""
+
+#Settings
+msgctxt "32100"
+msgid "General"
+msgstr ""
+
+msgctxt "32101"
+msgid "time interval Data Update in Min"
+msgstr ""
+
+msgctxt "32102"
+msgid "Show all topics directly"
+msgstr ""
+
+msgctxt "32103"
+msgid "Hide shows if title or topic contain audio description"
+msgstr ""
+
+msgctxt "32104"
+msgid "Play videos in best possible quality"
+msgstr ""

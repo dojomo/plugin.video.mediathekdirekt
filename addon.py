@@ -345,7 +345,7 @@ def sortTopics(channelInitial="|"):
                             result.append(entry[TOPIC])
     result.sort(key=lambda entry: entry.lower())
     for entry in result:
-        addDir(entry.encode('utf8'), channel.encode('utf8')+'|'+entry.encode('utf8'), 'sortTopic', fanart, len(result))
+        addDir(entry.encode('utf8'), channel+'|'+entry, 'sortTopic', fanart, len(result))
     endOfDirectory()
 
 def sortTopic(channelTopic = "|"):
@@ -362,14 +362,14 @@ def sortTopic(channelTopic = "|"):
     for entry in data:
         if channel != "":
             if entry[CHANNEL] == channel:
-                if entry[TOPIC].encode('utf8') == topic:
+                if entry[TOPIC].encode('utf8') == topic.encode('utf8'):
                     if hideAD == "true":
                         if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
                             result.append(entry)
                     else:
                         result.append(entry)
         else:
-            if entry[TOPIC].encode('utf8') == topic:
+            if entry[TOPIC].encode('utf8') == topic.encode('utf8'):
                 if hideAD == "true":
                     if "rfassung" not in entry[TITLE].lower() and "rfassung" not in entry[TOPIC].lower() and "audiodeskription" not in entry[TITLE].lower() and "audiodeskription" not in entry[TOPIC].lower() and "AD |" not in entry[TITLE] and "AD |" not in entry[TOPIC] and "(AD)" not in entry[TITLE] and "(AD)" not in entry[TOPIC]:
                         result.append(entry)
@@ -387,7 +387,7 @@ def search(channel=""):
     keyboard.doModal()
     if keyboard.isConfirmed() and keyboard.getText():
         #search_string = keyboard.getText().encode('utf8').lower()
-        search_string = keyboard.getText().lower()
+        search_string = keyboard.getText().encode('utf8').lower()
         if len(search_string) > 0:
             data = getData()
             for entry in data:
@@ -454,16 +454,16 @@ def searchDate(channelDate = ""):
                         result.append(cEntry)
                 else:
                     result.append(cEntry)
-            result.sort(key=lambda entry: entry[TITLE].lower())
+            #result.sort(key=lambda entry: entry[TITLE].lower())
         for entry in result:
             addVideo(entry)
     endOfDirectory()
 
 def updateData():
-    #target = urllib.URLopener()
+    #target = urllib.request.URLopener()
     #target.retrieve("https://www.mediathekdirekt.de/good.json.gz", jsonFileGZ)
     r = requests.get("https://www.mediathekdirekt.de/good.json")
-    with open(jsonFile, 'wb') as fd:
+    with open(jsonFile, 'wt') as fd:
         fd.write(r.text)
 def getBestQuality(entry):
     if playBestQuality == "true":
@@ -477,7 +477,9 @@ def getBestQuality(entry):
         for entry in reversed(urls):
             if len(entry) > 0:
                 #check if file exists
-                code = urllib.urlopen(entry).getcode()
+                try : code = urllib.request.urlopen(entry).getcode()
+                except urllib.error.HTTPError as e:
+                    code = "404"
                 if str(code) == "200":
                     return entry
     return entry[URL]
@@ -491,7 +493,7 @@ def downloadFile(video_url):
     #open browser dialog to choose destination
     dialog = xbmcgui.Dialog()
     download_dir = dialog.browse(3,translation(30102),"files")
-    target = urllib.URLopener()
+    target = urllib.request.URLopener()
     fullPath = xbmc.translatePath(download_dir+filename)
     target.retrieve(video_url,fullPath)
     dialog.ok(addonID, translation(30101), str(fullPath))
@@ -531,14 +533,21 @@ def getFanart(channel):
     return fanart
 
 def addDir(name, url, mode, iconimage, total=0):
-    u = sys.argv[0] + "?url=" + urllib.quote_plus(url) + "&mode=" + str(mode)
+    u = sys.argv[0] + "?url=" + urllib.parse.quote_plus(url) + "&mode=" + str(mode)
     ok = True
-    liz = xbmcgui.ListItem(name, iconImage=icon, thumbnailImage=iconimage)
+    liz = xbmcgui.ListItem(name)
+    liz.setArt({'icon': icon})
+    if not iconimage:
+        iconimage = defaultFanart
+    liz.setProperty("fanart_image", iconimage)
+    liz.setArt({'thumb': iconimage})
+    liz.setArt({'poster': iconimage})
+    liz.setArt({'banner': iconimage})
+    liz.setArt({'fanart': iconimage})
+    liz.setArt({'clearart': iconimage})
+    liz.setArt({'clearlogo': iconimage})
+    liz.setArt({'landscape': iconimage})
     liz.setInfo(type="Video", infoLabels={"Title": name})
-    if iconimage:
-        liz.setProperty("fanart_image", iconimage)
-    else:
-        liz.setProperty("fanart_image", defaultFanart)
     ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=liz, totalItems=total, isFolder=True)
     return ok
 
@@ -568,7 +577,7 @@ def addVideo(entry):
         li.setProperty("fanart_image", fanart)
         li.setProperty('IsPlayable', 'true')
         #add downloadButton to contextMenu
-        li.addContextMenuItems([(translation(30100),'RunPlugin(plugin://'+addonID+'/?mode=downloadFile&url='+urllib.quote_plus(url)+')',)],replaceItems=False)
+        li.addContextMenuItems([(translation(30100),'RunPlugin(plugin://'+addonID+'/?mode=downloadFile&url='+urllib.parse.quote_plus(url)+')',)],replaceItems=False)
         ok = xbmcplugin.addDirectoryItem(handle=pluginhandle, url=url, listitem=li)
     return ok
 
@@ -583,8 +592,8 @@ def parameters_string_to_dict(parameters):
     return paramDict
 
 params = parameters_string_to_dict(sys.argv[2])
-mode = urllib.unquote_plus(params.get('mode', ''))
-url = urllib.unquote_plus(params.get('url', ''))
+mode = urllib.parse.unquote_plus(params.get('mode', ''))
+url = urllib.parse.unquote_plus(params.get('url', ''))
 
 if mode == 'updateData':
     updateData()
