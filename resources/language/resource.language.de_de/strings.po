@@ -66,22 +66,22 @@ msgid "Select destination folder"
 msgstr "Zielordner wählen"
 
 #Settings
-msgctxt "32100"
+msgctxt "#32100"
 msgid "General"
 msgstr "Allgemeines"
 
-msgctxt "32101"
+msgctxt "#32101"
 msgid "time interval Data Update in Min"
 msgstr "Zeitintervall Datenupdate in Min"
 
-msgctxt "32102"
+msgctxt "#32102"
 msgid "Show all topics directly"
 msgstr "Direkt alle Themen anzeigen"
 
-msgctxt "32103"
+msgctxt "#32103"
 msgid "Hide shows if title or topic contain audio description"
 msgstr "Sendungen mit Hörfassung Audiodeskreption in Titel oder Beschreibung nicht anzeigen"
 
-msgctxt "32104"
+msgctxt "#32104"
 msgid "Play videos in best possible quality"
 msgstr "Videos immer in bester Qualität abspielen"

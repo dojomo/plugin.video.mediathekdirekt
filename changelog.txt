@@ -42,3 +42,5 @@
 1.0.1+matrix
 - Fixed display error in settings
 - Fixed display error icon and fanart
+1.0.2+matrix
+- Fixed german strings.po
