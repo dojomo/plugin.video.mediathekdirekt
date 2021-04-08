@@ -15,7 +15,7 @@ addon = xbmcaddon.Addon(id=addonID)
 pluginhandle = int(sys.argv[1])
 translation = addon.getLocalizedString
 addonDir = xbmc.translatePath(addon.getAddonInfo('path'))
-defaultFanart = os.path.join(addonDir,'resources/ard_fanart.jpg')
+defaultFanart = os.path.join(addonDir,'resources/images/fanart.png')
 icon = os.path.join(addonDir,'icon.png')
 addon_work_folder = xbmc.translatePath("special://profile/addon_data/" + addonID)
 jsonFileGZ = xbmc.translatePath("special://profile/addon_data/" + addonID + "/good.json.gz")

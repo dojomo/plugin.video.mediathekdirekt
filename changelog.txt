@@ -39,3 +39,6 @@
 - Updated dependencies
 - Updated code for Phython 3
 - using po files instead of depricated strings.xml for translation
+1.0.1+matrix
+- Fixed display error in settings
+- Fixed display error icon and fanart

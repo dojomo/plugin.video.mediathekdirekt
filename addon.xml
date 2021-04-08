@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.mediathekdirekt" name="Mediathek Direkt" version="1.0.0+matrix" provider-name="P_Aeh">
+<addon id="plugin.video.mediathekdirekt" name="Mediathek Direkt" version="1.0.1+matrix" provider-name="P_Aeh">
   <requires>
     <import addon="xbmc.python" version="3.0.0"/>
     <import addon="script.module.requests" version="2.22.0+matrix.0"/>
@@ -22,5 +22,9 @@
     <email></email>
     <source>https://github.com/dojomo/plugin.video.mediathekdirekt</source>
     <news></news>
+    <assets>
+      <icon>resources/images/icon.png</icon>
+      <fanart>resources/images/fanart.jpg</fanart>
+    </assets>
   </extension>
 </addon>
