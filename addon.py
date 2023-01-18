@@ -8,7 +8,14 @@ import json
 import re
 import time
 import requests
+import xbmcvfs
+import xbmc
 from datetime import date, timedelta
+
+try:
+    xbmc.translatePath = xbmcvfs.translatePath
+except AttributeError:
+    pass
 
 addonID = 'plugin.video.mediathekdirekt'
 addon = xbmcaddon.Addon(id=addonID)
