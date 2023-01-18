@@ -44,3 +44,6 @@
 - Fixed display error icon and fanart
 1.0.2+matrix
 - Fixed german strings.po
+1.0.3+matrix.1 / 1.0.3+nexus.1
+- Added compability for Kodi Nexus
+- Fixed error for streams only available in HD

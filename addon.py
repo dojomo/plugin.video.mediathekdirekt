@@ -479,8 +479,11 @@ def getBestQuality(entry):
         if len(entry[HD]) > 1:
             #create hd url
             params = entry[HD].split('|',1)
-            pos = params[0]
-            urls[1] = urls[0][:int(pos)] + params[1] 
+            if len(params) == 1:
+                urls[1] = urls[0] + params[0]
+            elif len(params) > 1:
+                pos = params[0]
+                urls[1] = urls[0][:int(pos)] + params[1] 
         for entry in reversed(urls):
             if len(entry) > 0:
                 #check if file exists

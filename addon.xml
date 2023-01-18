@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.mediathekdirekt" name="Mediathek Direkt" version="1.0.2+matrix" provider-name="P_Aeh">
+<addon id="plugin.video.mediathekdirekt" name="Mediathek Direkt" version="1.0.3+matrix.1" provider-name="P_Aeh">
   <requires>
     <import addon="xbmc.python" version="3.0.0"/>
-    <import addon="script.module.requests" version="2.22.0+matrix.0"/>
+    <import addon="script.module.requests" version="2.27.1+matrix.1"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
