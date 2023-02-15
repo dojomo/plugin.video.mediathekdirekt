@@ -506,7 +506,7 @@ def downloadFile(video_url):
     target = urllib.request.URLopener()
     fullPath = xbmc.translatePath(download_dir+filename)
     target.retrieve(video_url,fullPath)
-    dialog.ok(addonID, translation(30101), str(fullPath))
+    dialog.ok(addonID, translation(30101) + " " + str(fullPath))
 
 #getData() returns all entrys of json file
 #entry[0] = channel

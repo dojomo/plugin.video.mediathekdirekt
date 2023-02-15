@@ -47,3 +47,6 @@
 1.0.3+matrix.1
 - Added compability for Kodi Nexus
 - Fixed error for streams only available in HD
+1.0.3+matrix.2
+- Fixed Download File ok Dialog Error:
+	since V19 xbmcgui.Dialog().ok() has less arguments
